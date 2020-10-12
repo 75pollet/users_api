@@ -31,12 +31,15 @@ defmodule UsersApi.Server do
 
   @impl true
   def handle_call(:get_users, _from, state) do
-    users = state.max_number |> User.users_with_most_points() |> Repo.all()
     new_state = %{state | timestamp: NaiveDateTime.utc_now()}
-    {:reply, %{users: users, timestamp: new_state.timestamp}, new_state}
+    {:reply, %{users: _users(state.max_number), timestamp: new_state.timestamp}, new_state}
   end
 
   defp _schedule_next_run do
     Process.send_after(self(), :update_points, 60_000)
+  end
+
+  defp _users(max_number) do
+    max_number |> User.users_with_most_points() |> Repo.all()
   end
 end
