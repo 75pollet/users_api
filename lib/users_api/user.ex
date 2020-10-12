@@ -17,10 +17,19 @@ defmodule UsersApi.Users.User do
     |> cast(attributes, [:points])
   end
 
+  @doc """
+  returns a query that fetches all users
+  """
+  @spec all_users_query :: Ecto.Query.t()
   def all_users_query do
     from(__MODULE__)
   end
 
+  @doc """
+  returns a query that fetches two users whose points are more than
+  max number
+  """
+  @spec users_with_most_points(integer()) :: Ecto.Query.t()
   def users_with_most_points(max_number) do
     from u in all_users_query(),
       where: u.points > ^max_number,
